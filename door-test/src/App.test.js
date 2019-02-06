@@ -1,36 +1,36 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import App from './App';
 import Dashboard from './components/dashboard';
 import Controls from './components/controls';
 import Display from './components/display';
 
 
-it('renders without crashing', () => {
-  shallow(<App />)
-});
+// it('renders without crashing', () => {
+//   shallow(<App />)
+// });
 
 
-describe('dashboard', () => {
+// describe('dashboard', () => {
 
-  it('renders without crashing', () => {
-    shallow(<Dashboard />)
-  })
+//   it('renders without crashing', () => {
+//     shallow(<Dashboard />)
+//   })
 
-  it('renders the display component', () => {
-    const wrapper = shallow(<Dashboard />);
-    const display = wrapper.find('Display');
+//   it('renders the display component', () => {
+//     const wrapper = shallow(<Dashboard />);
+//     const display = wrapper.find('Display');
 
-    expect(display.length).toBe(1);
-  })
+//     expect(display.length).toBe(1);
+//   })
 
-  it('renders the control component', () => {
-    const wrapper = shallow(<Dashboard />);
-    const controls = wrapper.find('Controls');
+//   it('renders the control component', () => {
+//     const wrapper = shallow(<Dashboard />);
+//     const controls = wrapper.find('Controls');
 
-    expect(controls.length).toBe(1);
-  })
-})
+//     expect(controls.length).toBe(1);
+//   })
+// })
 
 
 
@@ -89,21 +89,73 @@ describe('dashboard', () => {
 
 
 
-// describe('controls', () => {
+describe('controls', () => {
 
-//   it('renders state for the closed and locked buttons', () => {
+  it('renders without crashing', () => {
+    shallow(<Controls />)
+  })
 
-//   })
+  it('renders the closed and locked buttons', () => {
+    const wrapper = shallow(<Controls />)
+    const lock = wrapper.find('button.lock-unlock');
+    const opener = wrapper.find('button.open-close');
+    expect(lock.length).toBe(1);
+    expect(opener.length).toBe(1);
+  })
 
-//   it('changes the test of the button when the state changes', () => {
+  it('renders state for the buttons', () => {
+    const wrapper = mount(<Dashboard />);
+    const lock = wrapper.find('button.lock-unlock');
+    const opener = wrapper.find('button.open-close');
 
-//   })
+    expect(lock.text()).toBe('Lock Gate');
+    expect(opener.text()).toBe('Close Gate');
+  })
 
-//   it('disables the close toggle button when the gate is closed', () => {
+  it('changes the text of the button when the state changes', () => {
+    const wrapper = mount(<Dashboard />);
+    const lock = wrapper.find('button.lock-unlock');
+    const opener = wrapper.find('button.open-close');
 
-//   })
+    opener.simulate('click');
+    expect(opener.text()).toBe('Open Gate');
 
-//   it('disables the lock toggle button when the gate is open', () => {
+    lock.simulate('click');
+    expect(lock.text()).toBe('Unlock Gate')
 
-//   })
-// })
+    lock.simulate('click');
+    expect(lock.text()).toBe('Lock Gate')
+  })
+
+  it('disables the close toggle button when the gate is closed', () => {
+    const wrapper = mount(<Dashboard />);
+    const lock = wrapper.find('button.lock-unlock');
+
+    lock.simulate('click');
+    expect(lock.text()).toBe('Lock Gate')
+
+  })
+
+  it('disables the lock toggle button when the gate is open', () => {
+
+    const wrapper = mount(<Dashboard />);
+    const lock = wrapper.find('button.lock-unlock');
+    const opener = wrapper.find('button.open-close');
+
+    opener.simulate('click');
+    expect(opener.text()).toBe('Open Gate');
+
+    lock.simulate('click');
+    expect(lock.text()).toBe('Unlock Gate')
+
+    opener.simulate('click');
+    expect(opener.text()).toBe('Open Gate');
+
+    lock.simulate('click');
+    expect(lock.text()).toBe('Lock Gate')
+
+    opener.simulate('click');
+    expect(opener.text()).toBe('Close Gate');
+  })
+
+})
